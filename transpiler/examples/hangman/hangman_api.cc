@@ -12,35 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// #include "hangman_api.h"
+
+// #pragma hls_top
+// int hangmanMakeMove_UNSAFE(char letter) {
+//   // "hangman" is the secret word that needs to be guessed by the player
+
+//   // TODO: Implement a less hacky iterative solution with arrays
+//   // TODO: Implement support for multiple words
+//   const int top = 123;
+//   int out = 0;
+//   #pragma hls_unroll yes
+//   for (int i; i++; i < top) {
+//     out+=i;  // 100000, Hangman
+//   }
+//   // No matching letters
+//   return out;
+// }
+
+
+#include <stdio.h>
+#include <gmp.h>
 #include "hangman_api.h"
 
-#pragma hls_top
-int hangmanMakeMove(char letter) {
-  // "hangman" is the secret word that needs to be guessed by the player
+int hangmanMakeMove_UNSAFE() {
+    mpz_t prime, result;
+    mpz_init(result);
+    // Initialize a 256-bit integer
+    mpz_init(prime);
 
-  // TODO: Implement a less hacky iterative solution with arrays
-  // TODO: Implement support for multiple words
+    // Set the value of the integer to a 256-bit prime
+    mpz_set_str(prime, "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f", 16);
 
-  if (letter == 'h') {
-    return 64;  // 100000, Hangman
-  }
 
-  if (letter == 'a') {
-    return 34;  // 0100010, hAngmAn
-  }
+    mpz_mod(prime, prime , result);
 
-  if (letter == 'n') {
-    return 17;  // 0010001, haNgmaN
-  }
 
-  if (letter == 'g') {
-    return 8;  // 0001000, hanGman
-  }
 
-  if (letter == 'm') {
-    return 4;  // 0000100, hangMan
-  }
 
-  // No matching letters
-  return 0;
+    return 0;
 }

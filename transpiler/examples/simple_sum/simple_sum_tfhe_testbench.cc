@@ -48,12 +48,12 @@ int main(int argc, char** argv) {
 
   // create inputs.
   int x = 4052;
-  int y = 913;
+//   int y = 913;
 
-  cout << "inputs are " << x << " and " << y << ", sum: " << x + y << endl;
+//   cout << "inputs are " << x << " and " << y << ", sum: " << x + y << endl;
   // Encrypt data
   auto ciphertext_x = Tfhe<int>::Encrypt(x, key);
-  auto ciphertext_y = Tfhe<int>::Encrypt(y, key);
+//   auto ciphertext_y = Tfhe<int>::Encrypt(y, key);
 
   cout << "Encryption done" << endl;
 
@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
   // Decrypt results.
   cout << ciphertext_x.Decrypt(key);
   cout << "  ";
-  cout << ciphertext_y.Decrypt(key);
+//   cout << ciphertext_y.Decrypt(key);
 
   cout << "\n";
 
@@ -69,12 +69,12 @@ int main(int argc, char** argv) {
   // Perform addition
   Tfhe<int> cipher_result(params);
   XLS_CHECK_OK(
-      simple_sum(cipher_result, ciphertext_x, ciphertext_y, cloud_key));
+      simple_sum(cipher_result, ciphertext_x, cloud_key));
 
   cout << "\t\t\t\t\tComputation done" << endl;
 
-  cout << "Decrypted x: " << ciphertext_x.Decrypt(key) << "\n";
-  cout << "Decrypted y: " << ciphertext_y.Decrypt(key) << "\n";
+//   cout << "Decrypted x: " << ciphertext_x.Decrypt(key) << "\n";
+//   cout << "Decrypted y: " << ciphertext_y.Decrypt(key) << "\n";
   cout << "Decrypted result: " << cipher_result.Decrypt(key) << "\n";
 
   cout << "Decryption done" << endl;

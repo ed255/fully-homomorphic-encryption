@@ -93,8 +93,8 @@ http_archive(
 # Toolchain to install LLVM, a requirements for XLS
 http_archive(
     name = "com_grail_bazel_toolchain",
-    sha256 = "06e1421091f153029c070f1ae364f8cb5a61dab20ede97a844a0f7bfcec632a4",
-    strip_prefix = "bazel-toolchain-0.8",
+    sha256 = "2dc9de41b115b43feed18a585061522e2ab828eac5a55213f6cb394dbb7e58f8",
+    strip_prefix = "toolchains_llvm-0.8",
     urls = [
         "https://github.com/grailbio/bazel-toolchain/archive/refs/tags/0.8.zip",
     ],

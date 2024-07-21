@@ -8,9 +8,18 @@ load("//transpiler/rust:fhe_rs.bzl", "fhe_rust_library")
 
 licenses(["notice"])
 
+fhe_cc_library(
+    name = "add_one_c",
+    src = "add_one.cc",
+    hdrs = ["add_one.h"],
+    encryption = "tfhe",
+    num_opt_passes = 2,
+    optimizer = "xls",
+)
+
 fhe_rust_library(
     name = "add_one_fhe_rs_lib",
-    src = "add_one.cc",
+    src = "add_one.",
     hdrs = ["add_one.h"],
 )
 

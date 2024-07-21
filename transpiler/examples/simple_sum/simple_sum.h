@@ -15,7 +15,10 @@
 #ifndef FULLY_HOMOMORPHIC_ENCRYPTION_TRANSPILER_EXAMPLES_STRUCTS_SIMPLE_SUM_H_
 #define FULLY_HOMOMORPHIC_ENCRYPTION_TRANSPILER_EXAMPLES_STRUCTS_SIMPLE_SUM_H_
 
+#include <stdint.h>
+#include <string.h> 
+
 // Adds two numbers.
-int simple_sum(int &a, int &b);
+int simple_sum(int a);
 
 #endif  // FULLY_HOMOMORPHIC_ENCRYPTION_TRANSPILER_EXAMPLES_STRUCTS_SIMPLE_SUM_H_
