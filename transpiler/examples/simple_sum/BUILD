@@ -214,7 +214,7 @@ rust_library(
     srcs = ["simple_sum_rs_lib.rs"],
     deps = [
         ":simple_sum_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 

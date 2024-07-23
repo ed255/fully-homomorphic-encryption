@@ -98,7 +98,7 @@ rust_library(
     srcs = ["mul_rs_lib.rs"],
     deps = [
         ":mul_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 

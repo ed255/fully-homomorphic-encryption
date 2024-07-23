@@ -72,7 +72,7 @@ rust_library(
     srcs = ["hangman_rs_lib.rs"],
     deps = [
         ":hangman_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 
@@ -88,7 +88,7 @@ rust_binary(
     srcs = ["hangman_rs_lib.rs"],
     deps = [
         ":hangman_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 

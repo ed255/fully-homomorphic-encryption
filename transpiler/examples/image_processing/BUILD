@@ -457,7 +457,7 @@ rust_library(
     srcs = ["ricker_wavelet_rs_lib.rs"],
     deps = [
         ":ricker_wavelet_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 

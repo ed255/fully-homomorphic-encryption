@@ -20,7 +20,7 @@ rust_library(
     ],
     deps = [
         "@crate_index//:rayon",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 
@@ -36,6 +36,6 @@ rust_binary(
     deps = [
         ":hello_world_fhe_lib",
         "@crate_index//:rayon",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )

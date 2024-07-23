@@ -204,6 +204,9 @@ crates_repository(
         "rayon": crate.spec(
             version = "1.7.0",
         ),
+        "num-traits": crate.spec(
+            version = "0.2.19",
+        )
     },
     render_config = render_config(
         default_package_name = "",

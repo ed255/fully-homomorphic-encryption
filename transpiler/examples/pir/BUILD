@@ -134,7 +134,7 @@ rust_library(
     srcs = ["pir_rs_lib.rs"],
     deps = [
         ":pir_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 

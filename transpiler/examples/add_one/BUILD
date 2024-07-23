@@ -32,7 +32,7 @@ rust_library(
     ],
     deps = [
         ":add_one_fhe_rs_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 
@@ -48,7 +48,7 @@ rust_library(
     srcs = ["add_one_lib.rs"],
     deps = [
         ":add_one_gate_fhe_rs_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 

@@ -159,7 +159,7 @@ def rust_codegen(name, rust_file_name, src, cell_library = None, parallelism = 0
         tags = tags,
         deps = [
             "@crate_index//:rayon",
-            "@crate_index//:tfhe",
+            "@crate_index//:phantom-zone",
         ],
         rustc_flags = rustc_flags,
         **kwargs

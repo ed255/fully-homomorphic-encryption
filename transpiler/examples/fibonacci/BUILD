@@ -271,7 +271,7 @@ rust_library(
     srcs = ["fibonacci_rs_lib.rs"],
     deps = [
         ":fibonacci_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 
@@ -287,7 +287,7 @@ rust_binary(
     srcs = ["fibonacci_rs_lib.rs"],
     deps = [
         ":fibonacci_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 

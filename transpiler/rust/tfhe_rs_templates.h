@@ -14,7 +14,6 @@ use rayon::prelude::*;
 use std::collections::HashMap;
 
 use phantom_zone::*;
-use tfhe::shortint::CiphertextBig as Ciphertext;
 
 type Ciphertext = FheBool;
 

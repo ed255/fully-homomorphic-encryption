@@ -232,7 +232,7 @@ cc_binary(
 #     srcs = ["ifte_rs_lib.rs"],
 #     deps = [
 #         ":ifte_rs_fhe_lib",
-#         "@crate_index//:tfhe",
+#         "@crate_index//:phantom-zone",
 #     ],
 # )
 #

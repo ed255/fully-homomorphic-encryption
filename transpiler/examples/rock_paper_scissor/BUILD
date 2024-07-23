@@ -116,7 +116,7 @@ rust_library(
     srcs = ["rock_paper_scissor_rs_lib.rs"],
     deps = [
         ":rock_paper_scissor_rs_fhe_lib",
-        "@crate_index//:tfhe",
+        "@crate_index//:phantom-zone",
     ],
 )
 
