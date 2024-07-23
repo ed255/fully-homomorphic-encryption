@@ -182,7 +182,7 @@ rust_register_toolchains(
     edition = "2021",
     versions = [
         # see https://github.com/bazelbuild/rules_rust/blob/main/util/fetch_shas_VERSIONS.txt
-        "1.70.0",
+        "1.79.0",
     ],
 )
 
@@ -194,13 +194,12 @@ crates_repository(
     cargo_lockfile = "//:Cargo.lock",
     lockfile = "//:Cargo.Bazel.lock",
     packages = {
-        "tfhe": crate.spec(
+        "phantom-zone": crate.spec(
+            git = "https://github.com/gausslabs/phantom-zone.git",
             features = [
-                "boolean",
-                "shortint",
-                "x86_64-unix",
+                "non_interactive_mp",
             ],
-            version = "0.2.4",
+            branch = "experimental",
         ),
         "rayon": crate.spec(
             version = "1.7.0",

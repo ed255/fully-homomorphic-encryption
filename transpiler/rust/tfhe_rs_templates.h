@@ -13,14 +13,10 @@ constexpr absl::string_view kCodegenTemplate = R"rust(
 use rayon::prelude::*;
 use std::collections::HashMap;
 
-use tfhe::shortint;
-use tfhe::shortint::prelude::*;
+use phantom_zone::*;
 use tfhe::shortint::CiphertextBig as Ciphertext;
 
-fn generate_lut(lut_as_int: u64, server_key: &ServerKey) -> shortint::server_key::LookupTableOwned {
-    let f = |x: u64| (lut_as_int >> (x as u8)) & 1;
-    return server_key.generate_accumulator(f);
-}
+type Ciphertext = FheBool;
 
 enum GateInput {
     Arg(usize, usize), // arg + index
@@ -31,7 +27,6 @@ enum GateInput {
 
 use GateInput::*;
 
-#[cfg(not(lut))]
 #[derive(PartialEq, Eq, Hash)]
 enum CellType {
     AND2,
@@ -42,11 +37,6 @@ enum CellType {
     NOR2,
     INV,
     // TODO: Add back MUX2
-}
-
-#[cfg(lut)]
-enum CellType {
-    LUT3(u64), // lut_as_int
 }
 
 use CellType::*;
@@ -60,49 +50,11 @@ fn prune(temp_nodes: &mut HashMap<usize, Ciphertext>, temp_node_ids: &[usize]) {
 }
 
 pub fn $function_signature {
-    let (constant_false, constant_true): (Ciphertext, Ciphertext) = (
-      server_key.create_trivial(0), server_key.create_trivial(1));
-
     let args: &[&Vec<Ciphertext>] = &[$ordered_params];
-
-    #[cfg(lut)]
-    let luts = {
-        let mut luts: HashMap<u64, shortint::server_key::LookupTableOwned> = HashMap::new();
-        const LUTS_AS_INTS: [u64; $num_luts] = [$comma_separated_luts];
-        for lut_as_int in LUTS_AS_INTS {
-            luts.insert(lut_as_int, generate_lut(lut_as_int, server_key));
-        }
-        luts
-    };
-
-    #[cfg(not(lut))]
-    let luts = {
-        let mut luts: HashMap<CellType, shortint::server_key::LookupTableOwned> = HashMap::new();
-        const CELLS_TO_LUTS: [(CellType, u64); 3] = [(NAND2, 7), (NOR2, 1), (XNOR2, 9)];
-        for (cell, lut) in CELLS_TO_LUTS {
-            luts.insert(cell, generate_lut(lut, server_key));
-        }
-        luts
-    };
-
-    #[cfg(lut)]
-    let lut3 = |args: &[&Ciphertext], lut: u64| -> Ciphertext {
-        let top_bit = server_key.unchecked_scalar_mul(args[2], 4);
-        let middle_bit = server_key.unchecked_scalar_mul(args[1], 2);
-        let ct_input = server_key.unchecked_add(&top_bit, &server_key.unchecked_add(&middle_bit, args[0]));
-        return server_key.apply_lookup_table(&ct_input, &luts[&lut]);
-    };
-
-    #[cfg(not(lut))]
-    let boolean_lut = |args: &[&Ciphertext], cell: CellType| -> Ciphertext {
-        let first_bit = server_key.unchecked_scalar_mul(args[1], 2);
-        let ct_input = &server_key.unchecked_add(&first_bit, args[0]);
-        return server_key.apply_lookup_table(&ct_input, &luts[&cell]);
-    };
 
     let mut temp_nodes = HashMap::new();
     let mut $output_stem = Vec::new();
-    $output_stem.resize($num_outputs, constant_false.clone());
+    $output_stem.resize($num_outputs, None);
 
     let mut run_level = |
       temp_nodes: &mut HashMap<usize, Ciphertext>,
@@ -114,11 +66,13 @@ pub fn $function_signature {
                 let (id, is_output, celltype) = k;
                 let task_args = task_args.into_iter()
                   .map(|arg| match arg {
-                    Cst(false) => &constant_false,
-                    Cst(true) => &constant_true,
+                    Cst(false) => todo!(),
+                    Cst(true) => todo!(),
                     Arg(pos, ndx) => &args[*pos][*ndx],
                     Tv(ndx) => &temp_nodes[ndx],
-                    Output(ndx) => &$output_stem[*ndx],
+                    Output(ndx) => &$output_stem[*ndx]
+                                .as_ref()
+                                .expect(&format!("Output node {ndx} not found")),
                   }).collect::<Vec<_>>();
                 #[cfg(lut)]
                 let gate_func = |args: &[&Ciphertext]| match celltype {
@@ -126,13 +80,13 @@ pub fn $function_signature {
                 };
                 #[cfg(not(lut))]
                 let gate_func = |args: &[&Ciphertext]| match celltype {
-                  AND2 => server_key.bitand(args[0], args[1]),
-                  NAND2 => boolean_lut(args, NAND2),
-                  OR2 => server_key.bitor(args[0], args[1]),
-                  NOR2 => boolean_lut(args, NOR2),
-                  XOR2 => server_key.bitxor(args[0], args[1]),
-                  XNOR2 => boolean_lut(args, XNOR2),
-                  INV => server_key.bitxor(args[0], &constant_true),
+                    AND2 => args[0] & args[1],
+                    NAND2 => args[0].nand(args[1]),
+                    OR2 => args[0] | args[1],
+                    NOR2 => args[0].nor(args[1]),
+                    XOR2 => args[0] ^ args[1],
+                    XNOR2 => args[0].xnor(args[1]),
+                    INV => !args[0],
                 };
                 ((*id, *is_output), gate_func(&task_args))
             })
@@ -140,7 +94,7 @@ pub fn $function_signature {
         updates.into_iter().for_each(|(k, v)| {
             let (index, is_output) = k;
             if is_output {
-                $output_stem[index] = v;
+                $output_stem[index] = Some(v);
             } else {
                 temp_nodes.insert(index, v);
             }

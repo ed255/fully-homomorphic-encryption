@@ -261,6 +261,7 @@ cc_test(
 
 fhe_rust_library(
     name = "fibonacci_rs_fhe_lib",
+    lut_size = 0,
     src = "fibonacci.cc",
     hdrs = ["fibonacci.h"],
 )

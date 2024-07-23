@@ -187,7 +187,7 @@ absl::StatusOr<std::string> YosysTfheRsTranspiler::Translate(int parallelism) {
   // Idiomatic in rust to not include return as a statement, but default to
   // returning the last line of a statement block as an expression.
   std::string return_statement =
-      output_stem + (module().outputs().size() == 1 ? "[0]" : "");
+      output_stem + (module().outputs().size() == 1 ? "[0].unwrap()" : ".into_iter().map(|c| c.unwrap()).collect()");
 
   return absl::StrReplaceAll(
       kCodegenTemplate,
@@ -451,7 +451,7 @@ absl::StatusOr<std::string> YosysTfheRsTranspiler::FunctionSignature() {
     }
   }
 
-  return absl::Substitute("$0($1, server_key: &ServerKey) -> $2",
+  return absl::Substitute("$0($1) -> $2",
                           ToSnakeCase(module().name()),
                           absl::StrJoin(param_signatures, ", "), output_type);
 }
