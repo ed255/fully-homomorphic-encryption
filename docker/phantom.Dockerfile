@@ -19,11 +19,18 @@
 
 FROM julianweng/fhe-google:latest
 
+RUN apt-get update && apt-get install -y \
+  vim \
+  ripgrep \
+  fd-find
+
 WORKDIR /usr/src/fhe/
 
 RUN git remote add jay https://github.com/Janmajayamall/fully-homomorphic-encryption
-RUN git pull jay compiler
-RUN git checkout jay/compiler
+# RUN git pull jay compiler
+# RUN git checkout jay/compiler
+RUN git pull jay more_unroll
+RUN git checkout jay/more_unroll
 RUN git log -1
 # Build an example to make sure all the intermediate build artifacts are
 # compiled in the Docker image

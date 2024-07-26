@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION=1
+VERSION=v2
 
 if [ "$#" -ne 1 ]; then
 	echo "Usage: ${0} PROJECT_NAME"
@@ -19,11 +19,11 @@ project="$1"
 
 mkdir -p projects
 mkdir -p local
-# $DOCKER run --rm -it --entrypoint /bin/bash \ # Debug
+# $DOCKER run --rm -it --entrypoint /bin/bash \
 $DOCKER run --rm -it --entrypoint /usr/src/fhe/compile.sh \
 	--mount type=bind,source="$(pwd)/local",target=/local \
 	--mount type=bind,source="$(pwd)/projects",target=/projects \
 	--mount type=bind,source="$(pwd)/compile.sh",target=/usr/src/fhe/compile.sh \
 	-e project="${project}" \
-	"phantom-zone:$VERSION"
+	"ed255/phantom-zone:$VERSION"
 

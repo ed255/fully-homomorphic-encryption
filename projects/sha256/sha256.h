@@ -29,13 +29,6 @@
 // #include <string.h>
 // #include <stddef.h>
 
-struct sha256_buff {
-    int data_size;
-    int h[8];
-    char last_chunk[64];
-    char chunk_size;
-};
-
 // /* Initialization, must be called before any further use */
 // void sha256_init(struct sha256_buff* buff);
 // 
@@ -49,7 +42,41 @@ struct sha256_buff {
 // /* Read digest into 32-byte binary array */
 // void sha256_read(const struct sha256_buff* buff, char* hash);
 
-char entrypoint(char a, char b);
+struct sha256_buff {
+    int data_size;
+    int h[8];
+    unsigned char last_chunk[64];
+    unsigned char chunk_size;
+
+    sha256_buff& operator=(const sha256_buff& b) {
+	data_size = b.data_size;
+	chunk_size = b.chunk_size;
+        #pragma hls_unroll yes
+        for(int i=0;i<8;i++) {
+            h[i] = b.h[i];
+        }      
+        #pragma hls_unroll yes
+        for(int i=0;i<64;i++) {
+            last_chunk[i] = b.last_chunk[i];
+        }      
+        return *this;
+    }
+};
+
+struct hash {
+    unsigned char v[32];
+
+    hash& operator=(const hash& h) {
+        #pragma hls_unroll yes
+        for(int i=0;i<32;i++) {
+            v[i] = h.v[i];
+        }      
+        return *this;
+    }
+};
+
+
+struct hash entrypoint(unsigned char a, unsigned char b);
 
 // /* Read digest into 64-char string as hex (without null-byte) */
 // void sha256_read_hex(const struct sha256_buff* buff, char* hex);

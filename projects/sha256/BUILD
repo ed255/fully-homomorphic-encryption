@@ -7,6 +7,7 @@ licenses(["notice"])
 fhe_rust_library(
     name = "sha256_rs_fhe_lib",
     lut_size = 0,
+    loop_unroll_rlimit = 100,
     src = "sha256.cc",
     hdrs = ["sha256.h"],
 )
