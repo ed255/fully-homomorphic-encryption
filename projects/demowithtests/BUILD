@@ -6,26 +6,26 @@ load("@rules_cc//cc:defs.bzl", "cc_test")
 licenses(["notice"])
 
 fhe_rust_library(
-    name = "demo_rs_fhe_lib",
+    name = "demowithtests_rs_fhe_lib",
     lut_size = 0,
-    src = "demo.cc",
-    hdrs = ["demo.h"],
+    src = "demowithtests.cc",
+    hdrs = ["demowithtests.h"],
 )
 
 rust_library(
-    name = "demo_rs_lib",
-    srcs = ["demo_rs_lib.rs"],
+    name = "demowithtests_rs_lib",
+    srcs = ["demowithtests_rs_lib.rs"],
     deps = [
-        ":demo_rs_fhe_lib",
+        ":demowithtests_rs_fhe_lib",
         "@crate_index//:phantom-zone",
     ],
 )
 
 rust_binary(
-    name = "demo_rs_main",
-    srcs = ["demo_rs_lib.rs"],
+    name = "demowithtests_rs_main",
+    srcs = ["demowithtests_rs_lib.rs"],
     deps = [
-        ":demo_rs_fhe_lib",
+        ":demowithtests_rs_fhe_lib",
         "@crate_index//:phantom-zone",
     ],
 )
@@ -42,7 +42,7 @@ cc_test(
 
 exports_files(
     [
-        "demo.h",
-        "demo.cc",
+        "demowithtests.h",
+        "demowithtests.cc",
     ],
 )
