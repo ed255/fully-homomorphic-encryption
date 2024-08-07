@@ -1,4 +1,4 @@
-use demo_rs_fhe_lib::fibonacci_number;
+use demowithtests_rs_fhe_lib::fibonacci_number;
 // use tfhe::shortint::CiphertextBig as Ciphertext;
 // use tfhe::shortint::parameters::PARAM_MESSAGE_1_CARRY_2;
 // use tfhe::shortint::prelude::*;
