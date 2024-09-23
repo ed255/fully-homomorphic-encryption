@@ -29,6 +29,7 @@ folder.  You can make a copy of the `demo` folder to get started, afterwards
 you'll need to rename the files to use your project name as well as change the
 files to use your project name:
 
+Linux version:
 ```
 project=myproject
 cp -r projects/demo projects/${project}
@@ -37,7 +38,7 @@ rm -rf out
 mv demo.cc ${project}.cc
 mv demo.h ${project}.h
 mv demo_rs_lib.rs ${project}_rs_lib.rs
-sed -i='' "s/demo/${project}/g" *
+sed -i'' "s/demo/${project}/g" *
 ```
 
 Once your code is placed in `projects/${project}/${project}.cc` and
