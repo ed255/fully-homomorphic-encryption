@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION=v2
+VERSION=v3
 
 if [ "$#" -ne 1 ]; then
 	echo "Usage: ${0} PROJECT_NAME"
@@ -20,6 +20,7 @@ project="$1"
 mkdir -p projects
 mkdir -p local
 # $DOCKER run --rm -it --entrypoint /bin/bash \
+#	--mount type=bind,source="$(pwd)/transpiler",target=/usr/src/fhe/transpiler \
 $DOCKER run --rm -it --entrypoint /usr/src/fhe/compile.sh \
 	--mount type=bind,source="$(pwd)/local",target=/local \
 	--mount type=bind,source="$(pwd)/projects",target=/projects \

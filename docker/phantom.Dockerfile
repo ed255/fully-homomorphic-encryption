@@ -34,4 +34,4 @@ RUN git checkout ed255/phantom
 RUN git log -1
 # Build an example to make sure all the intermediate build artifacts are
 # compiled in the Docker image
-RUN bazel build //transpiler/examples/fibonacci:fibonacci_rs_main
+RUN bazel build //transpiler/examples/fibonacci:fibonacci_rs_fhe_lib

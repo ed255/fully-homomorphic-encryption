@@ -2,9 +2,7 @@
 use rayon::prelude::*;
 use std::collections::HashMap;
 
-use phantom_zone::*;
-
-type Ciphertext = FheBool;
+use phantom_zone_evaluator::boolean::{fhew::prelude::*, FheBool};
 
 enum GateInput {
     Arg(usize, usize), // arg + index
@@ -143,132 +141,135 @@ static LEVEL_10: [((usize, bool, CellType), &[GateInput]); 7] = [
     ((5, true, NAND2), &[Tv(58), Tv(8)]),
 ];
 
-static PRUNE_8: [usize; 9] = [
-  0,
-  72,
-  63,
-  56,
-  57,
-  19,
-  6,
-  9,
-  2,
-];
-
-static PRUNE_5: [usize; 3] = [
-  47,
-  65,
-  33,
-];
-
 static PRUNE_2: [usize; 10] = [
-  31,
-  24,
-  41,
+  36,
+  39,
+  15,
+  22,
   28,
   42,
-  36,
-  15,
-  39,
-  22,
+  24,
+  31,
+  41,
   44,
 ];
 
-static PRUNE_9: [usize; 6] = [
-  7,
-  3,
-  10,
-  1,
-  50,
-  51,
+static PRUNE_5: [usize; 3] = [
+  65,
+  33,
+  47,
 ];
 
 static PRUNE_6: [usize; 7] = [
+  43,
+  52,
   55,
   48,
-  52,
-  43,
   68,
   71,
   54,
 ];
 
-static PRUNE_3: [usize; 3] = [
-  45,
-  25,
-  32,
-];
-
-static PRUNE_7: [usize; 8] = [
-  62,
-  69,
-  17,
-  59,
-  66,
-  67,
-  70,
-  16,
+static PRUNE_9: [usize; 6] = [
+  50,
+  1,
+  7,
+  3,
+  10,
+  51,
 ];
 
 static PRUNE_1: [usize; 12] = [
-  14,
-  38,
-  34,
-  27,
-  21,
-  35,
   26,
   29,
-  37,
+  21,
+  35,
+  38,
+  14,
+  27,
+  34,
   30,
+  37,
   20,
   23,
 ];
 
+static PRUNE_7: [usize; 8] = [
+  67,
+  70,
+  59,
+  66,
+  62,
+  69,
+  17,
+  16,
+];
+
 static PRUNE_10: [usize; 9] = [
-  58,
-  8,
-  11,
-  4,
-  12,
   5,
+  12,
   60,
+  8,
+  4,
+  11,
+  58,
   13,
   64,
 ];
 
 static PRUNE_4: [usize; 6] = [
-  49,
-  18,
   46,
   53,
+  18,
+  49,
   61,
   40,
 ];
 
-fn prune(temp_nodes: &mut HashMap<usize, Ciphertext>, temp_node_ids: &[usize]) {
+static PRUNE_8: [usize; 9] = [
+  19,
+  57,
+  56,
+  63,
+  0,
+  72,
+  6,
+  2,
+  9,
+];
+
+static PRUNE_3: [usize; 3] = [
+  25,
+  32,
+  45,
+];
+
+fn prune<'a, E: BoolEvaluator>(
+    temp_nodes: &mut HashMap<usize, FheBool<'a, E>>,
+    temp_node_ids: &[usize],
+) {
   for x in temp_node_ids {
     temp_nodes.remove(&x);
   }
 }
 
-pub fn fibonacci_number(n: &Vec<Ciphertext>) -> Vec<Ciphertext> {
-    let args: &[&Vec<Ciphertext>] = &[n];
+pub fn fibonacci_number<'a, E: BoolEvaluator>(n: &Vec<FheBool<'a, E>>) -> Vec<FheBool<'a, E>> {
+    let args: &[&Vec<FheBool<'a, E>>] = &[n];
 
     let mut temp_nodes = HashMap::new();
     let mut out = Vec::new();
     out.resize(32, None);
 
     let mut run_level = |
-      temp_nodes: &mut HashMap<usize, Ciphertext>,
-      tasks: &[((usize, bool, CellType), &[GateInput])]
+    temp_nodes: &mut HashMap<usize, FheBool<'a, E>>,
+    tasks: &[((usize, bool, CellType), &[GateInput])]
     | {
         let updates = tasks
             .into_par_iter()
             .map(|(k, task_args)| {
                 let (id, is_output, celltype) = k;
                 let task_args = task_args.into_iter()
-                  .map(|arg| match arg {
+                .map(|arg| match arg {
                     Cst(false) => todo!(),
                     Cst(true) => todo!(),
                     Arg(pos, ndx) => &args[*pos][*ndx],
@@ -276,21 +277,18 @@ pub fn fibonacci_number(n: &Vec<Ciphertext>) -> Vec<Ciphertext> {
                     Output(ndx) => &out[*ndx]
                                 .as_ref()
                                 .expect(&format!("Output node {ndx} not found")),
-                  }).collect::<Vec<_>>();
-                #[cfg(lut)]
-                let gate_func = |args: &[&Ciphertext]| match celltype {
-                  LUT3(defn) => lut3(args, *defn),
-                };
-                #[cfg(not(lut))]
-                let gate_func = |args: &[&Ciphertext]| match celltype {
+                }).collect::<Vec<_>>();
+
+                let gate_func = |args: &[&FheBool<'a, E>]| match celltype {
                     AND2 => args[0] & args[1],
-                    NAND2 => args[0].nand(args[1]),
+                    NAND2 => args[0].bitnand(args[1]),
                     OR2 => args[0] | args[1],
-                    NOR2 => args[0].nor(args[1]),
+                    NOR2 => args[0].bitnor(args[1]),
                     XOR2 => args[0] ^ args[1],
-                    XNOR2 => args[0].xnor(args[1]),
+                    XNOR2 => args[0].bitxnor(args[1]),
                     INV => !args[0],
                 };
+                
                 ((*id, *is_output), gate_func(&task_args))
             })
             .collect::<Vec<_>>();
@@ -304,7 +302,7 @@ pub fn fibonacci_number(n: &Vec<Ciphertext>) -> Vec<Ciphertext> {
         });
     };
 
-    run_level(&mut temp_nodes, &LEVEL_0);
+        run_level(&mut temp_nodes, &LEVEL_0);
     run_level(&mut temp_nodes, &LEVEL_1);
     prune(&mut temp_nodes, &PRUNE_1);
     run_level(&mut temp_nodes, &LEVEL_2);
@@ -326,7 +324,7 @@ pub fn fibonacci_number(n: &Vec<Ciphertext>) -> Vec<Ciphertext> {
     run_level(&mut temp_nodes, &LEVEL_10);
     prune(&mut temp_nodes, &PRUNE_10);
 
-    out[10] = out[31].clone();
+        out[10] = out[31].clone();
     out[11] = out[31].clone();
     out[12] = out[31].clone();
     out[13] = out[31].clone();
@@ -354,3 +352,4 @@ pub fn fibonacci_number(n: &Vec<Ciphertext>) -> Vec<Ciphertext> {
 
     out.into_iter().map(|c| c.unwrap()).collect()
 }
+

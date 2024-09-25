@@ -11,23 +11,23 @@ fhe_rust_library(
     hdrs = ["demo.h"],
 )
 
-rust_library(
-    name = "demo_rs_lib",
-    srcs = ["demo_rs_lib.rs"],
-    deps = [
-        ":demo_rs_fhe_lib",
-        "@crate_index//:phantom-zone",
-    ],
-)
-
-rust_binary(
-    name = "demo_rs_main",
-    srcs = ["demo_rs_lib.rs"],
-    deps = [
-        ":demo_rs_fhe_lib",
-        "@crate_index//:phantom-zone",
-    ],
-)
+# rust_library(
+#     name = "demo_rs_lib",
+#     srcs = ["demo_rs_lib.rs"],
+#     deps = [
+#         ":demo_rs_fhe_lib",
+#         "@crate_index//:phantom-zone",
+#     ],
+# )
+# 
+# rust_binary(
+#     name = "demo_rs_main",
+#     srcs = ["demo_rs_lib.rs"],
+#     deps = [
+#         ":demo_rs_fhe_lib",
+#         "@crate_index//:phantom-zone",
+#     ],
+# )
 
 exports_files(
     [
