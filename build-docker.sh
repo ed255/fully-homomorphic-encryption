@@ -2,7 +2,7 @@
 
 set -ex
 
-VERSION=v2
+VERSION=v3
 
 sudo docker build --no-cache --file docker/phantom.Dockerfile . -t phantom-zone:$VERSION
 commit=$(sudo docker run --rm "phantom-zone:$VERSION" git log -1 --format="%h")

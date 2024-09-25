@@ -138,32 +138,32 @@ def rust_codegen(name, rust_file_name, src, cell_library = None, parallelism = 0
     transpiled_files = "{}.transpiled_files".format(name)
 
     _rust_codegen(
-        name = transpiled_files,
+        name = name,
         src = src,
         library_name = rust_file_name,
         cell_library = cell_library,
         parallelism = parallelism,
     )
 
-    transpiled_source = "{}.srcs".format(name)
-    native.filegroup(
-        name = transpiled_source,
-        srcs = [":" + transpiled_files],
-        output_group = "sources",
-        tags = tags,
-    )
+    # transpiled_source = "{}.srcs".format(name)
+    # native.filegroup(
+    #     name = transpiled_source,
+    #     srcs = [":" + transpiled_files],
+    #     output_group = "sources",
+    #     tags = tags,
+    # )
 
-    rust_library(
-        name = name,
-        srcs = [":" + transpiled_source],
-        tags = tags,
-        deps = [
-            "@crate_index//:rayon",
-            "@crate_index//:phantom-zone",
-        ],
-        rustc_flags = rustc_flags,
-        **kwargs
-    )
+    # rust_library(
+    #     name = name,
+    #     srcs = [":" + transpiled_source],
+    #     tags = tags,
+    #     deps = [
+    #         "@crate_index//:rayon",
+    #         "@crate_index//:phantom-zone",
+    #     ],
+    #     rustc_flags = rustc_flags,
+    #     **kwargs
+    # )
 
 def fhe_rust_library(
         name,
