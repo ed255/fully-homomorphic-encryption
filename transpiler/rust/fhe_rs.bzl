@@ -173,6 +173,7 @@ def fhe_rust_library(
         generated_rust_file_name = None,
         lut_size = 3,
         parallelism = 0,
+        loop_unroll_rlimit = 10000,
         **kwargs):
     """A rule for building FHE-based rust_libraries.
 
@@ -223,6 +224,7 @@ def fhe_rust_library(
         name = transpiled_xlscc_files,
         library_name = name,
         src = src,
+        z3_rlimit = loop_unroll_rlimit,
         hdrs = hdrs,
     )
 

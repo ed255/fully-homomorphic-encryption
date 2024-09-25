@@ -49,63 +49,73 @@ fn prune(temp_nodes: &mut HashMap<usize, Ciphertext>, temp_node_ids: &[usize]) {
 }
 
 pub fn $function_signature {
-    let args: &[&Vec<Ciphertext>] = &[$ordered_params];
+    let parameter_set = get_active_parameter_set();
+    rayon::ThreadPoolBuilder::new()
+        .build_scoped(
+            |thread| {
+                set_parameter_set(parameter_set);
+                thread.run()
+            },
+            |pool| pool.install(|| {
 
-    let mut temp_nodes = HashMap::new();
-    let mut $output_stem = Vec::new();
-    $output_stem.resize($num_outputs, None);
+                let args: &[&Vec<Ciphertext>] = &[$ordered_params];
 
-    let mut run_level = |
-      temp_nodes: &mut HashMap<usize, Ciphertext>,
-      tasks: &[((usize, bool, CellType), &[GateInput])]
-    | {
-        let updates = tasks
-            .into_par_iter()
-            .map(|(k, task_args)| {
-                let (id, is_output, celltype) = k;
-                let task_args = task_args.into_iter()
-                  .map(|arg| match arg {
-                    Cst(false) => todo!(),
-                    Cst(true) => todo!(),
-                    Arg(pos, ndx) => &args[*pos][*ndx],
-                    Tv(ndx) => &temp_nodes[ndx],
-                    Output(ndx) => &$output_stem[*ndx]
-                                .as_ref()
-                                .expect(&format!("Output node {ndx} not found")),
-                  }).collect::<Vec<_>>();
-                #[cfg(lut)]
-                let gate_func = |args: &[&Ciphertext]| match celltype {
-                  LUT3(defn) => lut3(args, *defn),
+                let mut temp_nodes = HashMap::new();
+                let mut $output_stem = Vec::new();
+                $output_stem.resize($num_outputs, None);
+
+                let mut run_level = |
+                temp_nodes: &mut HashMap<usize, Ciphertext>,
+                tasks: &[((usize, bool, CellType), &[GateInput])]
+                | {
+                    let updates = tasks
+                        .into_par_iter()
+                        .map(|(k, task_args)| {
+                            let (id, is_output, celltype) = k;
+                            let task_args = task_args.into_iter()
+                            .map(|arg| match arg {
+                                Cst(false) => todo!(),
+                                Cst(true) => todo!(),
+                                Arg(pos, ndx) => &args[*pos][*ndx],
+                                Tv(ndx) => &temp_nodes[ndx],
+                                Output(ndx) => &$output_stem[*ndx]
+                                            .as_ref()
+                                            .expect(&format!("Output node {ndx} not found")),
+                            }).collect::<Vec<_>>();
+
+                            let gate_func = |args: &[&Ciphertext]| match celltype {
+                                AND2 => args[0] & args[1],
+                                NAND2 => args[0].nand(args[1]),
+                                OR2 => args[0] | args[1],
+                                NOR2 => args[0].nor(args[1]),
+                                XOR2 => args[0] ^ args[1],
+                                XNOR2 => args[0].xnor(args[1]),
+                                INV => !args[0],
+                            };
+                            
+                            ((*id, *is_output), gate_func(&task_args))
+                        })
+                        .collect::<Vec<_>>();
+                    updates.into_iter().for_each(|(k, v)| {
+                        let (index, is_output) = k;
+                        if is_output {
+                            $output_stem[index] = Some(v);
+                        } else {
+                            temp_nodes.insert(index, v);
+                        }
+                    });
                 };
-                #[cfg(not(lut))]
-                let gate_func = |args: &[&Ciphertext]| match celltype {
-                    AND2 => args[0] & args[1],
-                    NAND2 => args[0].nand(args[1]),
-                    OR2 => args[0] | args[1],
-                    NOR2 => args[0].nor(args[1]),
-                    XOR2 => args[0] ^ args[1],
-                    XNOR2 => args[0].xnor(args[1]),
-                    INV => !args[0],
-                };
-                ((*id, *is_output), gate_func(&task_args))
-            })
-            .collect::<Vec<_>>();
-        updates.into_iter().for_each(|(k, v)| {
-            let (index, is_output) = k;
-            if is_output {
-                $output_stem[index] = Some(v);
-            } else {
-                temp_nodes.insert(index, v);
-            }
-        });
-    };
 
-$run_level_ops
+            $run_level_ops
 
-$output_assignment_block
+            $output_assignment_block
 
-    $return_statement
+                $return_statement
+            }),
+        )
+        .unwrap()
 }
+
 )rust";
 
 // The data of a level's gate ops must be defined statically, or else the
