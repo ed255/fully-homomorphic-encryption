@@ -26,11 +26,11 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /usr/src/fhe/
 
-RUN git remote add jay https://github.com/Janmajayamall/fully-homomorphic-encryption
+RUN git remote add ed255 https://github.com/ed255/fully-homomorphic-encryption
 # RUN git pull jay compiler
 # RUN git checkout jay/compiler
-RUN git pull jay more_unroll
-RUN git checkout jay/more_unroll
+RUN git pull ed255 phantom
+RUN git checkout ed255/phantom
 RUN git log -1
 # Build an example to make sure all the intermediate build artifacts are
 # compiled in the Docker image
