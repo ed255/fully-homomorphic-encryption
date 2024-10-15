@@ -20,18 +20,25 @@ View entrypoint(State state, unsigned char x, unsigned char y) {
 
   #pragma hls_unroll yes
   for (int i=0; i<5; i++) {
-    unsigned char qx = x + i - 2;
+    unsigned char qx = (x + i - 2) & 0x3f;
     unsigned char cell_idx_partial = i*5;
     #pragma hls_unroll yes
     for (int j=0; j<5; j++) {
-      unsigned char qy = y + j - 2;
+      if ((i == 0 && j == 0) ||
+          (i == 0 && j == 4) ||
+          (i == 4 && j == 0) ||
+          (i == 4 && j == 4)) {
+        continue;
+      }
+      unsigned char qy = (y + j - 2) & 0x3f;
       unsigned char cell_idx = cell_idx_partial + j;
       struct CellData data;
       #pragma hls_unroll yes
       for (int k=0; k<NUM_OBJS; k++) {
         struct Object obj = state.objects[k];
-        if (qx == obj.x && qy == obj.y) {
+        if (((qx & 0x3f) == (obj.x & 0x3f)) && ((qy & 0x3f) == (obj.y & 0x3f))) {
            data = obj.data;
+           data.id &= 0x3f;
         }
       }
       view.cells[cell_idx] = data;

@@ -15,18 +15,18 @@
 #ifndef FULLY_HOMOMORPHIC_ENCRYPTION_TRANSPILER_EXAMPLES_FIBONACCI_FIBONACCI_H_
 #define FULLY_HOMOMORPHIC_ENCRYPTION_TRANSPILER_EXAMPLES_FIBONACCI_FIBONACCI_H_
 
-#define NUM_OBJS 5
+#define NUM_OBJS 10
 
 struct CellData {
     unsigned char id;
-    unsigned char hp;
-    unsigned char atk;
+    unsigned char hp_atk;
+    // unsigned char atk;
     bool is_consumed;
 
     CellData() {
         id = 0;
-        hp = 0;
-        atk = 0;
+        hp_atk = 0;
+        // atk = 0;
         is_consumed = 0;
     }
 };
