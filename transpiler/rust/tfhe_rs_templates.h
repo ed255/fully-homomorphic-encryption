@@ -192,7 +192,7 @@ constexpr absl::string_view kRunPruneTemplate =
 //     outputValue[15] = out[15].clone();
 //     out = out.split_off(16);
 //
-constexpr absl::string_view kAssignmentTemplate = "    %s[%d] = %s.clone();";
+constexpr absl::string_view kAssignmentTemplate = "    %s[%d] = Some(%s.clone());";
 constexpr absl::string_view kSplitTemplate = "    %s = %s.split_off(%d);";
 
 }  // namespace transpiler
