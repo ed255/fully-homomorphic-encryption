@@ -141,89 +141,23 @@ static LEVEL_10: [((usize, bool, CellType), &[GateInput]); 7] = [
     ((5, true, NAND2), &[Tv(58), Tv(8)]),
 ];
 
-static PRUNE_2: [usize; 10] = [
-  28,
-  42,
-  41,
-  24,
-  31,
-  44,
-  39,
-  15,
-  22,
-  36,
-];
-
-static PRUNE_5: [usize; 3] = [
-  65,
-  33,
-  47,
-];
-
 static PRUNE_9: [usize; 6] = [
   1,
+  7,
   3,
   10,
-  7,
   51,
   50,
 ];
 
 static PRUNE_6: [usize; 7] = [
   52,
-  48,
   55,
+  48,
+  68,
   71,
   54,
-  68,
   43,
-];
-
-static PRUNE_10: [usize; 9] = [
-  4,
-  11,
-  8,
-  58,
-  64,
-  13,
-  60,
-  5,
-  12,
-];
-
-static PRUNE_4: [usize; 6] = [
-  18,
-  49,
-  40,
-  61,
-  46,
-  53,
-];
-
-static PRUNE_7: [usize; 8] = [
-  59,
-  66,
-  17,
-  62,
-  69,
-  16,
-  70,
-  67,
-];
-
-static PRUNE_1: [usize; 12] = [
-  21,
-  26,
-  35,
-  27,
-  34,
-  38,
-  14,
-  23,
-  30,
-  37,
-  20,
-  29,
 ];
 
 static PRUNE_3: [usize; 3] = [
@@ -232,16 +166,82 @@ static PRUNE_3: [usize; 3] = [
   45,
 ];
 
+static PRUNE_4: [usize; 6] = [
+  18,
+  49,
+  61,
+  40,
+  46,
+  53,
+];
+
+static PRUNE_1: [usize; 12] = [
+  29,
+  21,
+  35,
+  38,
+  14,
+  27,
+  34,
+  30,
+  37,
+  20,
+  23,
+  26,
+];
+
+static PRUNE_2: [usize; 10] = [
+  28,
+  42,
+  24,
+  31,
+  41,
+  44,
+  36,
+  39,
+  15,
+  22,
+];
+
+static PRUNE_7: [usize; 8] = [
+  59,
+  66,
+  62,
+  69,
+  17,
+  16,
+  67,
+  70,
+];
+
+static PRUNE_5: [usize; 3] = [
+  65,
+  33,
+  47,
+];
+
 static PRUNE_8: [usize; 9] = [
-  57,
   56,
   63,
-  72,
   0,
+  72,
+  6,
   2,
   9,
-  6,
   19,
+  57,
+];
+
+static PRUNE_10: [usize; 9] = [
+  8,
+  4,
+  11,
+  58,
+  13,
+  64,
+  5,
+  12,
+  60,
 ];
 
 fn prune<'a, E: BoolEvaluator>(
