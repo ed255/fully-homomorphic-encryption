@@ -22,6 +22,7 @@ mkdir -p local
 # $DOCKER run --rm -it --entrypoint /bin/bash \
 #	--mount type=bind,source="$(pwd)/transpiler",target=/usr/src/fhe/transpiler \
 $DOCKER run --rm -it --entrypoint /usr/src/fhe/compile-frogzone.sh \
+	--mount type=bind,source="$(pwd)/transpiler",target=/usr/src/fhe/transpiler \
 	--mount type=bind,source="$(pwd)/local",target=/local \
 	--mount type=bind,source="$(pwd)/projects",target=/projects \
 	--mount type=bind,source="$(pwd)/compile.sh",target=/usr/src/fhe/compile.sh \
