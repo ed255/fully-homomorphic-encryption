@@ -17,6 +17,8 @@ get_cross_cells
 get_horizontal_cells
 get_vertical_cells"
 
+# funcs="get_cell"
+
 cp -r "/projects/${project}/" "transpiler/examples/prj_${project}"
 mkdir -p "/projects/${project}/out"
 

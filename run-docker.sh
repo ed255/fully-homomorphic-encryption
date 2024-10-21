@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION=v4
+VERSION=v5
 
 if [ "$#" -ne 1 ]; then
 	echo "Usage: ${0} PROJECT_NAME"
@@ -20,7 +20,6 @@ project="$1"
 mkdir -p projects
 mkdir -p local
 # $DOCKER run --rm -it --entrypoint /bin/bash \
-#	--mount type=bind,source="$(pwd)/transpiler",target=/usr/src/fhe/transpiler \
 #	--mount type=bind,source="$(pwd)/transpiler",target=/usr/src/fhe/transpiler \
 $DOCKER run --rm -it --entrypoint /usr/src/fhe/compile-frogzone.sh \
 	--mount type=bind,source="$(pwd)/local",target=/local \
