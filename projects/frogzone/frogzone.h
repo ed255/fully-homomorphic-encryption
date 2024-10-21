@@ -3,7 +3,7 @@
 
 #define NUM_OBSTACLES 100
 #define NUM_PLAYERS 4
-#define NUM_ITEMS 2
+#define NUM_ITEMS 16
 
 #define HEIGHT 64
 #define WIDTH 64

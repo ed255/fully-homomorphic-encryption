@@ -29,4 +29,3 @@ $DOCKER run --rm -it --entrypoint /usr/src/fhe/compile-frogzone.sh \
 	--mount type=bind,source="$(pwd)/compile-frogzone.sh",target=/usr/src/fhe/compile-frogzone.sh \
 	-e project="${project}" \
 	"ed255/phantom-zone:$VERSION"
-
