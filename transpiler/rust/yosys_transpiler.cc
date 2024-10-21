@@ -418,7 +418,7 @@ absl::StatusOr<std::string> YosysTfheRsTranspiler::FunctionSignature() {
   }
 
   int output_size = module().outputs().size();
-  std::string output_type = output_size == 1 ? "FheBool<'a, E>" : "Vec<FheBool<'a, E>>";
+  std::string output_type = output_size == 1 ? "FheBool<E>" : "Vec<FheBool<E>>";
 
   std::vector<std::string> param_signatures;
   for (const auto& input : module().inputs()) {
@@ -444,14 +444,14 @@ absl::StatusOr<std::string> YosysTfheRsTranspiler::FunctionSignature() {
 
     if (stem_count == 1) {
       param_signatures.push_back(
-          absl::StrCat(input_stem, ": ", rust_ref_type, "FheBool<'a, E>"));
+          absl::StrCat(input_stem, ": ", rust_ref_type, "FheBool<E>"));
     } else {
       param_signatures.push_back(
-          absl::StrCat(input_stem, ": ", rust_ref_type, "Vec<FheBool<'a, E>>"));
+          absl::StrCat(input_stem, ": ", rust_ref_type, "Vec<FheBool<E>>"));
     }
   }
 
-  return absl::Substitute("$0<'a, E: BoolEvaluator>($1) -> $2",
+  return absl::Substitute("$0<E: BoolEvaluator>($1) -> $2",
                           ToSnakeCase(module().name()),
                           absl::StrJoin(param_signatures, ", "), output_type);
 }

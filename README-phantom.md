@@ -20,7 +20,7 @@ Next pick a version and pull the image.  You can see the available version in
 hub](https://hub.docker.com/repository/docker/ed255/phantom-zone/general).  Each version is taged with a number and with the commit hash corresponding to https://github.com/Janmajayamall/fully-homomorphic-encryption
 
 ```
-sudo docker pull ed255/phantom-zone:v4
+sudo docker pull ed255/phantom-zone:v5
 ```
 
 Now you need to create a project folder for your C program.  You can see an

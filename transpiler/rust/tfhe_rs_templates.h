@@ -40,8 +40,8 @@ use CellType::*;
 
 $gate_levels
 
-fn prune<'a, E: BoolEvaluator>(
-    temp_nodes: &mut HashMap<usize, FheBool<'a, E>>,
+fn prune<E: BoolEvaluator>(
+    temp_nodes: &mut HashMap<usize, FheBool<E>>,
     temp_node_ids: &[usize],
 ) {
   for x in temp_node_ids {
@@ -50,14 +50,14 @@ fn prune<'a, E: BoolEvaluator>(
 }
 
 pub fn $function_signature {
-    let args: &[&Vec<FheBool<'a, E>>] = &[$ordered_params];
+    let args: &[&Vec<FheBool<E>>] = &[$ordered_params];
 
     let mut temp_nodes = HashMap::new();
     let mut $output_stem = Vec::new();
     $output_stem.resize($num_outputs, None);
 
     let mut run_level = |
-    temp_nodes: &mut HashMap<usize, FheBool<'a, E>>,
+    temp_nodes: &mut HashMap<usize, FheBool<E>>,
     tasks: &[((usize, bool, CellType), &[GateInput])]
     | {
         let updates = tasks
@@ -75,7 +75,7 @@ pub fn $function_signature {
                                 .expect(&format!("Output node {ndx} not found")),
                 }).collect::<Vec<_>>();
 
-                let gate_func = |args: &[&FheBool<'a, E>]| match celltype {
+                let gate_func = |args: &[&FheBool<E>]| match celltype {
                     AND2 => args[0] & args[1],
                     NAND2 => args[0].bitnand(args[1]),
                     OR2 => args[0] | args[1],

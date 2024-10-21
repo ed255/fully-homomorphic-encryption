@@ -2,7 +2,7 @@
 
 set -e
 
-VERSION=v4
+VERSION=v5
 
 if [ "$#" -ne 1 ]; then
 	echo "Usage: ${0} PROJECT_NAME"
